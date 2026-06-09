@@ -62,3 +62,18 @@ export const updateSessionStatus = async (req, res) => {
     });
   }
 };
+
+export const getAllSessions = async (req, res) => {
+  try {
+    const sessions = await Session.find()
+      .populate("mentor", "name email")
+      .populate("learner", "name email")
+      .sort({ createdAt: -1 });
+
+    res.json(sessions);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};

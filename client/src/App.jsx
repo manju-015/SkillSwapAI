@@ -11,12 +11,18 @@ import ConnectionsPage from "./pages/ConnectionsPage";
 import ChatPage from "./pages/ChatPage";
 import StudyPlanPage from "./pages/StudyPlanPage";
 import SessionsPage from "./pages/SessionsPage";
-import AnalyticsPage from "./pages/AnalyticsPage";
+import AnalyticsPage from "./pages/admin/AnalyticsPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import ReviewsPage from "./pages/ReviewsPage";
-import AdminPage from "./pages/AdminPage";
+import AdminPage from "./pages/admin/AdminPage";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import UserManagementPage from "./pages/admin/UserManagementPage";
+import SessionManagementPage from "./pages/admin/AdminSessionsPage";
+import ConnectionManagementPage from "./pages/admin/ConnectionManagementPage";
+import ReportsPage from "./pages/admin/ReportsPage";
+import PlatformSettingsPage from "./pages/admin/PlatformSettingsPage";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
 
 import PrivateRoute from "./routes/PrivateRoute";
 
@@ -84,7 +90,14 @@ function App() {
               </Layout>
             }
           />
-
+          <Route
+            path="/change-password"
+            element={
+              <Layout>
+                <ChangePasswordPage />
+              </Layout>
+            }
+          />
           <Route
             path="/chat/:userId"
             element={
@@ -113,7 +126,7 @@ function App() {
           />
 
           <Route
-            path="/analytics"
+            path="/admin/analytics"
             element={
               userInfo?.isAdmin ? (
                 <Layout>
@@ -156,6 +169,47 @@ function App() {
             }
           />
         </Route>
+        <Route
+          path="/admin/users"
+          element={
+            <Layout>
+              <UserManagementPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/admin/sessions"
+          element={
+            <Layout>
+              <SessionManagementPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/admin/connections"
+          element={
+            <Layout>
+              <ConnectionManagementPage />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/admin/reports"
+          element={
+            <Layout>
+              <ReportsPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={
+            <Layout>
+              <PlatformSettingsPage />
+            </Layout>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

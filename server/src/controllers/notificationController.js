@@ -23,7 +23,10 @@ export const markAsRead = async (req, res) => {
     console.log(req.body);
     const { notificationId } = req.body;
 
-    const notification = await Notification.findById(notificationId);
+    const notification = await Notification.findOne({
+      _id: notificationId,
+      user: req.user._id,
+    });
 
     if (!notification) {
       return res.status(404).json({

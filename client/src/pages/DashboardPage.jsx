@@ -58,9 +58,9 @@ function DashboardPage() {
       path: "/sessions",
     },
   ];
-
+  console.log("User Info:", userInfo);
   return (
-    <div className="space-y-6 pt-16 lg:pt-0">
+    <div className="space-y-6">
       {/* HERO */}
       <motion.div
         initial={{
@@ -108,12 +108,6 @@ function DashboardPage() {
 
                 <p className="text-sm text-slate-400">{userInfo?.email}</p>
               </div>
-            </div>
-
-            <div className="mt-5">
-              <span className="bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs px-3 py-1 rounded-full font-medium">
-                {userInfo?.level}
-              </span>
             </div>
           </div>
         </div>

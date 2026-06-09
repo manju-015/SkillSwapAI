@@ -37,24 +37,29 @@ function ConnectionsPage() {
 
   const bookSession = async (mentorId) => {
     const session = sessionData[mentorId];
-    if (!session?.skill || !session?.date) {
-      toast.error("Please provide skill and date");
+
+    if (!session?.skill || !session?.date || !session?.time) {
+      toast.error("Please provide skill, date, and time");
       return;
     }
+
+    const sessionDateTime = new Date(`${session.date}T${session.time}`);
+
     try {
       await api.post("/sessions/create", {
         mentor: mentorId,
         skill: session.skill,
-        date: session.date,
+        date: sessionDateTime,
       });
 
       toast.success("Session booked");
 
-      setsessionData({
+      setSessionData({
         ...sessionData,
         [mentorId]: {
-          setSkill: "",
-          setDate: "",
+          skill: "",
+          date: "",
+          time: "",
         },
       });
     } catch (error) {
@@ -213,32 +218,49 @@ function ConnectionsPage() {
                       type="text"
                       placeholder="Skill to learn"
                       value={sessionData[otherUser._id]?.skill || ""}
-                      onChange={(e) =>
-                        setSessionData({
-                          ...sessionData,
+                      onChange={(e) => {
+                        setSessionData((prev) => ({
+                          ...prev,
                           [otherUser._id]: {
-                            ...sessionData[otherUser._id],
+                            ...prev[otherUser._id],
                             skill: e.target.value,
                           },
-                        })
-                      }
+                        }));
+                      }}
                       className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 text-sm text-slate-600"
                     />
 
-                    <input
-                      type="datetime-local"
-                      value={sessionData[otherUser._id]?.date || ""}
-                      onChange={(e) =>
-                        setSessionData({
-                          ...sessionData,
-                          [otherUser._id]: {
-                            ...sessionData[otherUser._id],
-                            date: e.target.value,
-                          },
-                        })
-                      }
-                      className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 text-sm"
-                    />
+                    <div className="flex flex-col gap-2">
+                      <input
+                        type="date"
+                        value={sessionData[otherUser._id]?.date || ""}
+                        onChange={(e) => {
+                          setSessionData((prev) => ({
+                            ...prev,
+                            [otherUser._id]: {
+                              ...prev[otherUser._id],
+                              date: e.target.value,
+                            },
+                          }));
+                        }}
+                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-slate-600 text-sm"
+                      />
+
+                      <input
+                        type="time"
+                        value={sessionData[otherUser._id]?.time || ""}
+                        onChange={(e) => {
+                          setSessionData((prev) => ({
+                            ...prev,
+                            [otherUser._id]: {
+                              ...prev[otherUser._id],
+                              time: e.target.value,
+                            },
+                          }));
+                        }}
+                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-slate-600 text-sm"
+                      />
+                    </div>
 
                     <button
                       onClick={() => bookSession(otherUser._id)}

@@ -35,8 +35,6 @@ function NotificationsPage() {
             read: true,
           })),
         );
-
-        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -50,7 +48,7 @@ function NotificationsPage() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 max-w-4xl mx-auto">
       {/* HEADER */}
       <div>
         <p className="text-sm text-slate-500 mb-2">Updates</p>

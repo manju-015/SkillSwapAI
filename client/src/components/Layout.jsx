@@ -12,7 +12,7 @@ function Layout({ children }) {
         <div className="max-w-[1600px] mx-auto">
           {/* STICKY HEADER */}
 
-          <div className="sticky top-4 z-30 mb-6">
+          <div className="sticky top-0 z-30 mb-6 pt-4">
             <div className="bg-white/10 border border-white/[0.08] backdrop-blur-2xl rounded-3xl px-6 py-4 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold text-white">
@@ -41,7 +41,7 @@ function Layout({ children }) {
           </div>
 
           {/* PAGE CONTENT */}
-          <div className="space-y-6 pt-6">{children}</div>
+          <div className="space-y-6 pt-20 lg:pt-4">{children}</div>
         </div>
       </main>
     </div>

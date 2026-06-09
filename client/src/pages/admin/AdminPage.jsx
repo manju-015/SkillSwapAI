@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 
-import api from "../api/api";
+import api from "../../api/api";
 
 import toast from "react-hot-toast";
+
+import { useSelector } from "react-redux";
+
+import { useNavigate } from "react-router-dom";
 
 import {
   Shield,
@@ -18,6 +22,10 @@ function AdminPage() {
   const [analytics, setAnalytics] = useState(null);
 
   const [users, setUsers] = useState([]);
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const navigate = useNavigate();
 
   const fetchAdminData = async () => {
     try {
@@ -35,7 +43,11 @@ function AdminPage() {
 
       setUsers(data);
     } catch (error) {
-      toast.error("Failed to load users");
+      console.log("FULL ERROR:", error);
+      console.log("STATUS:", error.response?.status);
+      console.log("DATA:", error.response?.data);
+
+      toast.error(error.response?.data?.message || "Failed to load users");
     }
   };
 
@@ -55,6 +67,38 @@ function AdminPage() {
     fetchAdminData();
     fetchUsers();
   }, []);
+
+  const blockUserHandler = async (id) => {
+    try {
+      await api.put(`/admin/users/block/${id}`);
+
+      setUsers((prev) =>
+        prev.map((user) =>
+          user._id === id ? { ...user, isBlocked: true } : user,
+        ),
+      );
+
+      toast.success("User blocked");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Block failed");
+    }
+  };
+
+  const unblockUserHandler = async (id) => {
+    try {
+      await api.put(`/admin/users/unblock/${id}`);
+
+      setUsers((prev) =>
+        prev.map((user) =>
+          user._id === id ? { ...user, isBlocked: false } : user,
+        ),
+      );
+
+      toast.success("User unblocked");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Unblock failed");
+    }
+  };
 
   const stats = [
     {
@@ -86,7 +130,7 @@ function AdminPage() {
     <div className="space-y-6">
       {/* HEADER */}
       <div>
-        <p className="text-sm text-slate-500 mb-2">Administration</p>
+        <p className="text-sm text-slate-500 mt-0 mb-2">Administration</p>
 
         <h1 className="text-3xl font-semibold text-white-800">
           Admin Dashboard
@@ -97,39 +141,47 @@ function AdminPage() {
         </p>
       </div>
 
-      {/* STATS */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.title}
-            initial={{
-              opacity: 0,
-              y: 10,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              delay: index * 0.05,
-            }}
-            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-500">{stat.title}</p>
+      <div className="grid md:grid-cols-2 gap-5">
+        <div
+          onClick={() => navigate("/admin/users")}
+          className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm cursor-pointer hover:shadow-md transition"
+        >
+          <div className="flex items-center gap-3">
+            <Users size={20} className="text-blue-600" />
+            <h2 className="font-semibold text-slate-800">User Management</h2>
+          </div>
+        </div>
 
-                <h2 className="text-3xl font-semibold mt-2 text-slate-800">
-                  {stat.value}
-                </h2>
-              </div>
+        <div
+          onClick={() => navigate("/admin/sessions")}
+          className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm cursor-pointer hover:shadow-md transition"
+        >
+          <div className="flex items-center gap-3">
+            <CalendarDays size={20} className="text-green-600" />
+            <h2 className="font-semibold text-slate-800">Session Management</h2>
+          </div>
+        </div>
 
-              <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                {stat.icon}
-              </div>
-            </div>
-          </motion.div>
-        ))}
+        <div
+          onClick={() => navigate("/admin/connections")}
+          className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm cursor-pointer hover:shadow-md transition"
+        >
+          <div className="flex items-center gap-3">
+            <TrendingUp size={20} className="text-purple-600" />
+            <h2 className="font-semibold text-slate-800">
+              Connection Management
+            </h2>
+          </div>
+        </div>
+        <div
+          onClick={() => navigate("/admin/reports")}
+          className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm cursor-pointer hover:shadow-md transition"
+        >
+          <div className="flex items-center gap-3">
+            <Shield size={20} className="text-red-500" />
+            <h2 className="font-semibold text-slate-800">Reports Management</h2>
+          </div>
+        </div>
       </div>
 
       {/* OVERVIEW */}
@@ -182,36 +234,6 @@ function AdminPage() {
               All core systems are running normally with stable platform
               performance.
             </p>
-          </div>
-
-          <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm">
-            <h2 className="text-2xl font-semibold mb-6 text-slate-800">
-              All Users
-            </h2>
-
-            <div className="space-y-4">
-              {users.map((user) => (
-                <div
-                  key={user._id}
-                  className="flex items-center justify-between border border-gray-200 rounded-2xl p-4"
-                >
-                  <div>
-                    <h3 className="font-semibold text-slate-800">
-                      {user.name}
-                    </h3>
-
-                    <p className="text-sm text-slate-500">{user.email}</p>
-                  </div>
-
-                  <button
-                    onClick={() => deleteUserHandler(user._id)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm"
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </motion.div>

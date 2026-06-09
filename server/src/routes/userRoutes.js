@@ -7,6 +7,7 @@ import {
   updateUserProfile,
   getAllUsers,
   getUserById,
+  changePassword,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -18,5 +19,7 @@ router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, updateUserProfile);
 
 router.get("/:id", protect, getUserById);
+
+router.put("/change-password", protect, changePassword);
 
 export default router;

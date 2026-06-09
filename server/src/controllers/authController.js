@@ -56,6 +56,13 @@ export const loginUser = async (req, res) => {
       });
     }
 
+    // check blocked user
+    if (user.isBlocked) {
+      return res.status(403).json({
+        message: "Your account has been blocked by admin",
+      });
+    }
+
     // compare password
     const isMatch = await bcrypt.compare(password, user.password);
 

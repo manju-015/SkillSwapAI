@@ -12,6 +12,7 @@ import {
   Menu,
   X,
   BrainCircuit,
+  KeyRound,
 } from "lucide-react";
 
 import { Link, useLocation } from "react-router-dom";
@@ -105,12 +106,6 @@ function Navbar() {
     ...(userInfo?.isAdmin
       ? [
           {
-            title: "Analytics",
-
-            path: "/analytics",
-            icon: <BarChart3 size={18} />,
-          },
-          {
             title: "Admin",
             path: "/admin",
             icon: <Shield size={18} />,
@@ -132,6 +127,11 @@ function Navbar() {
           )}
         </div>
       ),
+    },
+    {
+      title: "Change Password",
+      path: "/change-password",
+      icon: <KeyRound size={18} />,
     },
   ];
 
