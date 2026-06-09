@@ -401,40 +401,12 @@ npm run dev
 
 ---
 
-# 📸 Screenshots
-
-Add project screenshots here:
-
-### Dashboard
-
-screenshots/dashboard.png
-
-### User Discovery
-
-screenshots/users.png
-
-### AI Study Planner
-
-screenshots/study-plan.png
-
-### Admin Dashboard
-
-screenshots/admin-dashboard.png
-
----
-
 # 👨‍💻 Author
 
 Manju M
 
 GitHub:
 https://github.com/manju-015
-
----
-
-# 📄 License
-
-This project is licensed under the MIT License.
 
 ---
 
